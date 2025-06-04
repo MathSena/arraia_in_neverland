@@ -10,7 +10,7 @@ export default function Header() {
       sx={{
         position: 'relative',
         width: '100%',
-        backgroundColor: '#8C4924',
+        backgroundColor: '#E9791A',
         borderBottomLeftRadius: '24px',
         borderBottomRightRadius: '24px',
         px: { xs: 2, sm: 6 },
