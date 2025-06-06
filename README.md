@@ -1,6 +1,6 @@
-# React + Vite
+# Arraiá in Neverland Karaoke Queue
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Simple React + Vite application to manage karaoke sign ups with a Supabase backend.
 
 Currently, two official plugins are available:
 

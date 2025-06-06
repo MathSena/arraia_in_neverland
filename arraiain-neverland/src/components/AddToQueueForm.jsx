@@ -6,7 +6,8 @@ import {
   Stack,
   Paper,
   InputAdornment,
-  Typography
+  Typography,
+  Snackbar
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
@@ -15,6 +16,8 @@ import { supabase } from '../supabaseClient';
 
 export default function AddToQueueForm() {
   const [form, setForm] = useState({ singer: '', artist: '', music: '' });
+  const [loading, setLoading] = useState(false);
+  const [snackOpen, setSnackOpen] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -22,8 +25,16 @@ export default function AddToQueueForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    await supabase.from('karaoke_queue').insert([{ ...form, is_playing: false, status: 'waiting', position: 0 }]);
-    setForm({ singer: '', artist: '', music: '' });
+    if (!form.singer || !form.artist || !form.music) return;
+    setLoading(true);
+    const { error } = await supabase
+      .from('karaoke_queue')
+      .insert([{ ...form, is_playing: false, status: 'waiting', position: 0 }]);
+    setLoading(false);
+    if (!error) {
+      setSnackOpen(true);
+      setForm({ singer: '', artist: '', music: '' });
+    }
   };
 
   return (
@@ -84,6 +95,7 @@ export default function AddToQueueForm() {
               type="submit"
               variant="contained"
               fullWidth
+              disabled={!form.singer || !form.artist || !form.music || loading}
               sx={{
                 backgroundColor: '#e17c2b',
                 borderRadius: '12px',
@@ -93,8 +105,14 @@ export default function AddToQueueForm() {
                 '&:hover': { backgroundColor: '#d1671c' }
               }}
             >
-              ➕ Adicionar à fila
+              {loading ? 'Adicionando...' : '➕ Adicionar à fila'}
             </Button>
+            <Snackbar
+              open={snackOpen}
+              autoHideDuration={3000}
+              onClose={() => setSnackOpen(false)}
+              message="Música adicionada!"
+            />
           </Stack>
         </form>
       </Paper>
