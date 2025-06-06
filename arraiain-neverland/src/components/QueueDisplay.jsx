@@ -1,9 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { Typography, Box, Paper, List, ListItem, ListItemText } from '@mui/material';
+import {
+  Typography,
+  Box,
+  Paper,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Alert
+} from '@mui/material';
 
 export default function QueueDisplay() {
   const [queue, setQueue] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchQueue();
@@ -16,8 +27,15 @@ export default function QueueDisplay() {
   }, []);
 
   const fetchQueue = async () => {
-    const { data } = await supabase.from('karaoke_queue').select('*').order('created_at');
-    setQueue(data || []);
+    setLoading(true);
+    const { data, error } = await supabase.from('karaoke_queue').select('*').order('created_at');
+    if (error) {
+      setError('Erro ao carregar fila');
+    } else {
+      setQueue(data || []);
+      setError('');
+    }
+    setLoading(false);
   };
 
   const nowPlaying = queue.find((item) => item.is_playing);
@@ -25,6 +43,12 @@ export default function QueueDisplay() {
 
   return (
     <Box sx={{ mt: 4 }}>
+      {loading && <CircularProgress sx={{ display: 'block', mx: 'auto', mb: 2 }} />}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
       <Paper sx={{ p: 3, borderRadius: '16px', backgroundColor: '#fce6c2', mb: 3 }}>
         <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 1 }}>🖊 Agora cantando:</Typography>
         {nowPlaying ? (

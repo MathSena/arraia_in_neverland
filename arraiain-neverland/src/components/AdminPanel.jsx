@@ -9,18 +9,29 @@ import {
   Button,
   Stack,
   Chip,
+  CircularProgress,
+  Alert
 } from '@mui/material';
 
 export default function AdminPanel() {
   const [queue, setQueue] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     fetchQueue();
   }, []);
 
   const fetchQueue = async () => {
-    const { data } = await supabase.from('karaoke_queue').select('*').order('created_at');
-    setQueue(data || []);
+    setLoading(true);
+    const { data, error } = await supabase.from('karaoke_queue').select('*').order('created_at');
+    if (error) {
+      setError('Erro ao carregar fila');
+    } else {
+      setQueue(data || []);
+      setError('');
+    }
+    setLoading(false);
   };
 
   const handlePlay = async (id) => {
@@ -50,6 +61,8 @@ export default function AdminPanel() {
       </Typography>
 
       <Stack spacing={3}>
+        {loading && <CircularProgress sx={{ alignSelf: 'center' }} />}
+        {error && <Alert severity="error">{error}</Alert>}
         {queue.map((item) => (
           <Card
             key={item.id}
