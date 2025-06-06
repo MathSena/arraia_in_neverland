@@ -10,7 +10,8 @@ export default function Header() {
       sx={{
         position: 'relative',
         width: '100%',
-        backgroundColor: '#E9791A',
+        backgroundColor: 'rgba(233, 121, 26, 0.75)', // mesmo tom com transparência
+        backdropFilter: 'blur(1px)', // opcional: desfoque sutil atrás
         borderBottomLeftRadius: '24px',
         borderBottomRightRadius: '24px',
         px: { xs: 2, sm: 6 },

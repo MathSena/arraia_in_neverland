@@ -1,6 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../supabaseClient';
-import { Button, Box, List, ListItem, ListItemText, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Typography,
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Stack,
+  Chip,
+} from '@mui/material';
 
 export default function AdminPanel() {
   const [queue, setQueue] = useState([]);
@@ -27,19 +36,71 @@ export default function AdminPanel() {
 
   return (
     <Box sx={{ mt: 4 }}>
-      <Typography variant="h5" gutterBottom>Painel de Controle 👨‍🎤</Typography>
-      <List>
+      <Typography
+        variant="h4"
+        sx={{
+          fontFamily: '"Rock Salt", cursive',
+          color: '#FFD93D',
+          textAlign: 'center',
+          mb: 4,
+          textShadow: '1px 1px 2px #000',
+        }}
+      >
+        Painel de Controle 👨‍🎤
+      </Typography>
+
+      <Stack spacing={3}>
         {queue.map((item) => (
-          <ListItem key={item.id} secondaryAction={
-            <Stack direction="row" spacing={1}>
-              <Button size="small" variant="outlined" onClick={() => handlePlay(item.id)}>▶️ Tocar</Button>
-              <Button size="small" color="error" variant="outlined" onClick={() => handleRemove(item.id)}>❌ Remover</Button>
-            </Stack>
-          }>
-            <ListItemText primary={item.singer} secondary={`${item.artist} – ${item.music}`} />
-          </ListItem>
+          <Card
+            key={item.id}
+            sx={{
+              backgroundColor: item.is_playing ? 'rgba(255, 241, 118, 0.95)' : 'rgba(255,255,255,0.8)',
+              border: item.is_playing ? '3px solid #FFD93D' : '1px solid #ccc',
+              boxShadow: item.is_playing
+                ? '0 0 15px 3px #FFD93D'
+                : '0 2px 8px rgba(0,0,0,0.2)',
+              borderRadius: 3,
+              transition: '0.3s ease',
+            }}
+          >
+            <CardContent>
+              <Typography variant="h6" sx={{ fontWeight: 700 }}>
+                {item.singer}
+              </Typography>
+              <Typography variant="body2" sx={{ color: '#444' }}>
+                {item.artist} – {item.music}
+              </Typography>
+              {item.is_playing && (
+                <Chip
+                  label="Tocando agora"
+                  color="warning"
+                  size="small"
+                  sx={{ mt: 1 }}
+                />
+              )}
+            </CardContent>
+
+            <CardActions sx={{ justifyContent: 'flex-end' }}>
+              <Button
+                size="small"
+                variant="contained"
+                onClick={() => handlePlay(item.id)}
+                disabled={item.is_playing}
+              >
+                ▶️ Tocar
+              </Button>
+              <Button
+                size="small"
+                variant="outlined"
+                color="error"
+                onClick={() => handleRemove(item.id)}
+              >
+                ❌ Remover
+              </Button>
+            </CardActions>
+          </Card>
         ))}
-      </List>
+      </Stack>
     </Box>
   );
 }

@@ -11,7 +11,7 @@ export default function Layout({ children }) {
         backgroundRepeat: 'repeat',
         backgroundSize: '40% auto',
         backgroundPosition: 'top center',
-        backgroundColor: '##E9791A',
+        backgroundColor: '#E9791A',
         pt: { xs: 8, sm: 10 },
         pb: 4,
       }}
