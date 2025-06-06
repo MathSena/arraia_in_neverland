@@ -1,5 +1,6 @@
 import React from 'react';
-import { Box, Typography, useMediaQuery, useTheme } from '@mui/material';
+import { Box, Typography, useMediaQuery, useTheme, Button } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 
 export default function Header() {
   const theme = useTheme();
@@ -24,6 +25,8 @@ export default function Header() {
     >
       <Box sx={{ color: '#fff', textShadow: '1px 1px 2px #000', textAlign: { xs: 'center', sm: 'left' } }}>
         <Typography
+          component={RouterLink}
+          to="/"
           variant={isMobile ? 'h4' : 'h3'}
           sx={{
             fontFamily: '"Rock Salt", cursive',
@@ -31,6 +34,7 @@ export default function Header() {
             fontWeight: 700,
             lineHeight: 1.2,
             mb: 1,
+            textDecoration: 'none'
           }}
         >
           ARRAIÁ IN <br /> NEVERLAND
@@ -56,6 +60,18 @@ export default function Header() {
           boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
         }}
       />
+      <Button
+        component={RouterLink}
+        to="/admin"
+        variant="contained"
+        color="secondary"
+        sx={{
+          mt: { xs: 3, sm: 0 },
+          fontWeight: 'bold',
+        }}
+      >
+        Painel
+      </Button>
     </Box>
   );
 }

@@ -6,7 +6,9 @@ import {
   Stack,
   Paper,
   InputAdornment,
-  Typography
+  Typography,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
@@ -15,6 +17,7 @@ import { supabase } from '../supabaseClient';
 
 export default function AddToQueueForm() {
   const [form, setForm] = useState({ singer: '', artist: '', music: '' });
+  const [open, setOpen] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -24,6 +27,7 @@ export default function AddToQueueForm() {
     e.preventDefault();
     await supabase.from('karaoke_queue').insert([{ ...form, is_playing: false, status: 'waiting', position: 0 }]);
     setForm({ singer: '', artist: '', music: '' });
+    setOpen(true);
   };
 
   return (
@@ -84,6 +88,7 @@ export default function AddToQueueForm() {
               type="submit"
               variant="contained"
               fullWidth
+              disabled={!form.singer || !form.artist || !form.music}
               sx={{
                 backgroundColor: '#e17c2b',
                 borderRadius: '12px',
@@ -98,6 +103,16 @@ export default function AddToQueueForm() {
           </Stack>
         </form>
       </Paper>
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setOpen(false)} severity="success" sx={{ width: '100%' }}>
+          Música adicionada na fila!
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }
