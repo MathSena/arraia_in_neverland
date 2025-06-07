@@ -12,6 +12,10 @@ import {
   CircularProgress,
   Alert
 } from '@mui/material';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import { LoadingButton } from '@mui/lab';
+
 
 export default function AdminPanel() {
   const [queue, setQueue] = useState([]);
@@ -65,53 +69,97 @@ export default function AdminPanel() {
         {error && <Alert severity="error">{error}</Alert>}
         {queue.map((item) => (
           <Card
-            key={item.id}
+          key={item.id}
+          sx={{
+            backgroundColor: item.is_playing ? 'rgba(255, 241, 118, 0.95)' : 'rgba(255,255,255,0.8)',
+            border: item.is_playing ? '3px solid #FFD93D' : '1px solid #ccc',
+            boxShadow: item.is_playing
+              ? '0 0 15px 3px #FFD93D'
+              : '0 2px 8px rgba(0,0,0,0.2)',
+            borderRadius: 3,
+            transition: '0.3s ease',
+          }}
+        >
+          <CardContent
             sx={{
-              backgroundColor: item.is_playing ? 'rgba(255, 241, 118, 0.95)' : 'rgba(255,255,255,0.8)',
-              border: item.is_playing ? '3px solid #FFD93D' : '1px solid #ccc',
-              boxShadow: item.is_playing
-                ? '0 0 15px 3px #FFD93D'
-                : '0 2px 8px rgba(0,0,0,0.2)',
-              borderRadius: 3,
-              transition: '0.3s ease',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0.5,
+              color: '#000',
+              paddingBottom: 0,
             }}
           >
-            <CardContent>
-              <Typography variant="h6" sx={{ fontWeight: 700 }}>
-                {item.singer}
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#444' }}>
-                {item.artist} – {item.music}
-              </Typography>
-              {item.is_playing && (
-                <Chip
-                  label="Tocando agora"
-                  color="warning"
-                  size="small"
-                  sx={{ mt: 1 }}
-                />
-              )}
-            </CardContent>
-
-            <CardActions sx={{ justifyContent: 'flex-end' }}>
-              <Button
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>
+              {item.singer}
+            </Typography>
+        
+            <Typography
+              variant="body2"
+              sx={{
+                color: '#333',
+                wordBreak: 'break-word',
+                fontSize: 14,
+                lineHeight: 1.4,
+              }}
+            >
+              🎵 {item.artist} — <em>{item.music}</em>
+            </Typography>
+        
+            {item.is_playing && (
+              <Chip
+                label="Tocando agora"
+                color="warning"
                 size="small"
-                variant="contained"
-                onClick={() => handlePlay(item.id)}
-                disabled={item.is_playing}
-              >
-                ▶️ Tocar
-              </Button>
-              <Button
-                size="small"
-                variant="outlined"
-                color="error"
-                onClick={() => handleRemove(item.id)}
-              >
-                ❌ Remover
-              </Button>
-            </CardActions>
-          </Card>
+                sx={{ mt: 1, alignSelf: 'flex-start' }}
+              />
+            )}
+          </CardContent>
+        
+          <CardActions sx={{ justifyContent: 'flex-end', gap: 1, px: 2, pb: 2 }}>
+            <LoadingButton
+              size="small"
+              variant="contained"
+              onClick={() => handlePlay(item.id)}
+              disabled={item.is_playing}
+              startIcon={<PlayArrowIcon />}
+              sx={{
+                borderRadius: 3,
+                background: 'linear-gradient(45deg, #FFD93D 30%, #F4A259 90%)',
+                color: '#000',
+                fontWeight: 600,
+                textTransform: 'none',
+                boxShadow: '0 4px 10px rgba(0,0,0,0.25)',
+                '&:hover': {
+                  background: 'linear-gradient(45deg, #FFCB05 10%, #E06C00 90%)',
+                },
+              }}
+            >
+              Tocar
+            </LoadingButton>
+        
+            <LoadingButton
+              size="small"
+              variant="outlined"
+              color="error"
+              onClick={() => handleRemove(item.id)}
+              startIcon={<DeleteForeverIcon />}
+              sx={{
+                borderRadius: 3,
+                textTransform: 'none',
+                fontWeight: 600,
+                borderColor: '#f44336',
+                color: '#f44336',
+                '&:hover': {
+                  backgroundColor: 'rgba(244,67,54,0.1)',
+                  borderColor: '#d32f2f',
+                },
+              }}
+            >
+              Remover
+            </LoadingButton>
+          </CardActions>
+        </Card>
+        
         ))}
       </Stack>
     </Box>
